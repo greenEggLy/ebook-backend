@@ -4,12 +4,16 @@ import com.example.ebookbackend.entity.Book;
 
 import java.util.List;
 
+
 public interface BookDao {
+
+    Book findOne(Long id);
+
     Book getOne(Long id);
 
     List<Book> getAll();
 
-    void buyBook(Long id, Long num); // buy book directly, not through cart
+//    void buyBook(Long id, Long num); // buy book directly, not through cart
 
     void deleteBook(Long id);
 
@@ -24,6 +28,13 @@ public interface BookDao {
     void modPrice(Long id, Float price);
 
     void modPub(Long id, String pub);
-    
+
+    void addStock(Long id, Long num);
+
+    void minusStock(Long id, Long num);
+
+    void addSales(Long id, Long num);
+
+    void minusSales(Long id, Long num);
 
 }

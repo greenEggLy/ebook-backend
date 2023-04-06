@@ -1,11 +1,14 @@
 package com.example.ebookbackend.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,7 +22,8 @@ public class Picture {
     @Column(name = "url", length = 2048)
     private String url;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
     @JoinColumn(name = "book_id")
     private Book book;
 }

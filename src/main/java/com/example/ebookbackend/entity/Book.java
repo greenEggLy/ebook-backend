@@ -1,11 +1,14 @@
 package com.example.ebookbackend.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import javax.persistence.*;
+import java.util.List;
 
 
 @Data
@@ -29,17 +32,19 @@ public class Book {
     private Float price;
     @Column(name = "pub")
     private String pub;
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    @Column(name = "pics")
-    private Set<Picture> pics;
     @Column(name = "stock")
     private Long stock;
     @Column(name = "sales")
     private Long sales;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Picture> pics;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
-    @Column(name = "belong_cart")
-    private Set<CartItem> cartItemSet;
+    private List<CartItem> cartItemSet;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = {CascadeType.DETACH})
-    @Column(name = "belong_order")
-    private Set<OrderItem> orderItemSet;
+    private List<OrderItem> orderItemSet;
 }

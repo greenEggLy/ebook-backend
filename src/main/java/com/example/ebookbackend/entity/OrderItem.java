@@ -1,14 +1,16 @@
 package com.example.ebookbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 @Data
-@Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
@@ -21,11 +23,11 @@ public class OrderItem {
     private Long number;
     @ManyToOne
     @JoinColumn(name = "book_id")
-    @JsonIncludeProperties(value = {"id", "title", "price"})
     private Book book;
 
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;    // belongs to which order
 }

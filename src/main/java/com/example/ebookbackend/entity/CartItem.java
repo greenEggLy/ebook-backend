@@ -1,14 +1,16 @@
 package com.example.ebookbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 @Data
-@Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cart_item")
 public class CartItem {
@@ -16,12 +18,16 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "number")
     private Long number;
+
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
     @ManyToOne
     @JoinColumn(name = "adder_id")
+    @JsonIgnore
     private User adder;
 }

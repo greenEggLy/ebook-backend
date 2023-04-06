@@ -9,6 +9,10 @@ public interface UserDao {
 
     List<User> getAll();
 
+    User findUserById(Long id);
+
+    User findUserByName(String username);
+
     void addUser(String name, String about, String avatar);
 
     void delUser(Long id);

@@ -1,7 +1,9 @@
 package com.example.ebookbackend.entity;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.List;
@@ -29,10 +31,12 @@ public class User {
     private Boolean isAdmin;
     @Column(name = "block")
     private Boolean isBlocked;
+
+    @JsonIgnoreProperties(value = {"adder"})
     @OneToMany(mappedBy = "adder", cascade = CascadeType.ALL)
-    @Column(name = "cart")
     private List<CartItem> cart;
+
+    @JsonIgnoreProperties(value = {"buyer"})
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
-    @Column(name = "orders")
     private List<Order> orders;
 }
