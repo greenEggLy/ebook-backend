@@ -43,13 +43,19 @@ public class OrderItemDaoImpl implements OrderItemDao {
         return itemRepository.findAll();
     }
 
+
     @Override
     public void addOrderItems(List<CartItem> cartItems, Long order_id) {
         Order order = orderRepository.findOrderById(order_id);
         for (CartItem cartItem : cartItems) {
+            Book book = bookRepository.findBookById(cartItem.getBook().getId());
+            book.setStock(book.getStock() - cartItem.getNumber());
+            book.setSales(book.getSales() + cartItem.getNumber());
+            bookRepository.save(book);
             OrderItem orderItem = OrderItem.builder()
                     .book(cartItem.getBook())
                     .number(cartItem.getNumber())
+                    .price(cartItem.getBook().getPrice())
                     .order(order)
                     .build();
             itemRepository.save(orderItem);
@@ -60,11 +66,16 @@ public class OrderItemDaoImpl implements OrderItemDao {
     public void addOrderItem(Long book_id, Long order_id, Long num) {
         Order order = orderRepository.findOrderById(order_id);
         Book book = bookRepository.getBookById(book_id);
+        book.setStock(book.getStock() - num);
+        book.setSales(book.getSales() + num);
+        bookRepository.save(book);
         OrderItem orderItem = OrderItem.builder()
                 .book(book)
                 .number(num)
                 .order(order)
+                .price(book.getPrice())
                 .build();
+        System.out.println(orderItem.getPrice());
         itemRepository.save(orderItem);
     }
 

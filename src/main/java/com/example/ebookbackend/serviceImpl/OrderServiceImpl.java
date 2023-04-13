@@ -1,5 +1,7 @@
 package com.example.ebookbackend.serviceImpl;
 
+import com.example.ebookbackend.constant.forms.BookSalesForm;
+import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
 import com.example.ebookbackend.dao.CartItemDao;
 import com.example.ebookbackend.dao.OrderDao;
 import com.example.ebookbackend.dao.OrderItemDao;
@@ -9,8 +11,7 @@ import com.example.ebookbackend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -32,8 +33,57 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findAll() {
+        return orderDao.findAll();
+    }
+
+    @Override
     public List<Order> findTimeBetween(Date earlier, Date later) {
         return orderDao.findTimeBetween(earlier, later);
+    }
+
+    @Override
+    public List<BookSalesForm> sortOrdersBySales(List<Order> orders) {
+        Map<String, Long> map = new HashMap<String, Long>();
+        orders.forEach((order) -> {
+            order.getItems().forEach(((orderItem) -> {
+                if (map.containsKey(orderItem.getBook().getTitle())) {
+                    map.put(orderItem.getBook().getTitle(), map.get(orderItem.getBook().getTitle()) + orderItem.getNumber());
+                } else {
+                    map.put(orderItem.getBook().getTitle(), orderItem.getNumber());
+                }
+            }));
+        });
+        List<BookSalesForm> list = new ArrayList<BookSalesForm>();
+        map.forEach((key, value) -> {
+            list.add(new BookSalesForm(key, value));
+        });
+        list.sort((o1, o2) -> {
+            return o2.getSales().compareTo(o1.getSales());
+        });
+        return list;
+    }
+
+    @Override
+    public List<BookSalesMoneyForm> sortOrdersByMoney(List<Order> orders) {
+        Map<String, Float> map = new HashMap<String, Float>();
+        orders.forEach((order) -> {
+            order.getItems().forEach(((orderItem) -> {
+                if (map.containsKey(orderItem.getBook().getTitle())) {
+                    map.put(orderItem.getBook().getTitle(), map.get(orderItem.getBook().getTitle()) + orderItem.getNumber());
+                } else {
+                    map.put(orderItem.getBook().getTitle(), orderItem.getNumber() * orderItem.getPrice());
+                }
+            }));
+        });
+        List<BookSalesMoneyForm> list = new ArrayList<BookSalesMoneyForm>();
+        map.forEach((key, value) -> {
+            list.add(new BookSalesMoneyForm(key, value));
+        });
+        list.sort((o1, o2) -> {
+            return o2.getMoney().compareTo(o1.getMoney());
+        });
+        return list;
     }
 
     @Override

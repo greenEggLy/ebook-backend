@@ -1,15 +1,16 @@
 package com.example.ebookbackend.entity;
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -23,15 +24,18 @@ public class Order {
     @Column(name = "id")
     private Long id;
     @Column(name = "time")
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
+//    @Temporal(TemporalType.DATE)
     private Date time;
 
     @ManyToOne
+    @JsonIncludeProperties(value = {"id", "name"})
     @JoinColumn(name = "buyer_id")
     private User buyer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+
     @JsonIgnoreProperties(value = {"order"})
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> items;
 
 

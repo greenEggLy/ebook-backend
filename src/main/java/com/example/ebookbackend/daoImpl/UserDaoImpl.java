@@ -1,12 +1,19 @@
 package com.example.ebookbackend.daoImpl;
 
+import com.example.ebookbackend.constant.forms.ManUserInfoForm;
 import com.example.ebookbackend.dao.UserDao;
 import com.example.ebookbackend.entity.User;
 import com.example.ebookbackend.repository.UserRepository;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.example.ebookbackend.constant.GlobalInfo.ROLE_ADMIN;
+import static com.example.ebookbackend.constant.GlobalInfo.ROLE_USER;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -19,8 +26,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<ManUserInfoForm> getAll() {
+        val allUsers = userRepository.findAll();
+        val allUsersInfo = new ArrayList<ManUserInfoForm>();
+        allUsers.forEach(user -> {
+            val info = ManUserInfoForm.builder()
+                    .id(user.getId())
+                    .username(user.getName())
+                    .email(user.getEmail())
+                    .is_admin(user.getIs_admin())
+                    .is_blocked(user.getUserAuth().getIsBlocked())
+                    .build();
+            allUsersInfo.add(info);
+        });
+        return allUsersInfo;
     }
 
     @Override
@@ -31,6 +50,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findUserByName(String username) {
         return userRepository.findUserByName(username);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
@@ -45,27 +69,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public void setBlock(Long id) {
-        User user = getOne(id);
-        user.setIsBlocked(true);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void setUnblock(Long id) {
-        User user = getOne(id);
-        user.setIsBlocked(false);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void setAdmin(Long id) {
-        User user = getOne(id);
-        user.setIsAdmin(true);
-        userRepository.save(user);
     }
 
     @Override
@@ -87,6 +90,16 @@ public class UserDaoImpl implements UserDao {
         User user = getOne(id);
         user.setAbout(about);
         userRepository.save(user);
+    }
+
+    @Override
+    public void modRole(Long id, Boolean role) {
+        User user = getOne(id);
+        if (Objects.equals(role, ROLE_USER)) {
+            user.setIs_admin(false);
+        } else if (Objects.equals(role, ROLE_ADMIN)) {
+            user.setIs_admin(true);
+        }
     }
 
 }

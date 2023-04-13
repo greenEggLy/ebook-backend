@@ -13,28 +13,18 @@ public interface BookDao {
 
     List<Book> getAll();
 
-//    void buyBook(Long id, Long num); // buy book directly, not through cart
-
     void deleteBook(Long id);
 
-    void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales);
+    void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url);
 
-    void modTitle(Long id, String title);
+    void modBook(Book book);
 
-    void modAuthor(Long id, String author);
-
-    void modIsbn(Long id, String isbn);
-
-    void modPrice(Long id, Float price);
-
-    void modPub(Long id, String pub);
+    void modPic(Long id, String pic_url);
 
     void addStock(Long id, Long num);
 
     void minusStock(Long id, Long num);
 
     void addSales(Long id, Long num);
-
-    void minusSales(Long id, Long num);
 
 }

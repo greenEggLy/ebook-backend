@@ -35,8 +35,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addNewBook(String title, String author, String isbn, Float price, String pub, Long stock) {
-        bookDao.addBook(title, author, isbn, price, pub, stock, 0L);
+    public void modBook(Book book) {
+        bookDao.modBook(book);
+    }
+
+    @Override
+    public void addNewBook(String title, String author, String isbn, Float price, String pub, Long stock, String pic_url) {
+        bookDao.addBook(title, author, isbn, price, pub, stock, 0L, pic_url);
     }
 
     @Override
@@ -45,27 +50,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void modTitle(Long id, String title) {
-        bookDao.modTitle(id, title);
+    public void modPic(Long id, String pic_url) {
+        bookDao.modPic(id, pic_url);
     }
 
-    @Override
-    public void modAuthor(Long id, String author) {
-        bookDao.modAuthor(id, author);
-    }
-
-    @Override
-    public void modIsbn(Long id, String isbn) {
-        bookDao.modIsbn(id, isbn);
-    }
-
-    @Override
-    public void modPrice(Long id, Float price) {
-        bookDao.modPrice(id, price);
-    }
-
-    @Override
-    public void modPub(Long id, String pub) {
-        bookDao.modPub(id, pub);
-    }
 }

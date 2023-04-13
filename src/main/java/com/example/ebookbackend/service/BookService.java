@@ -14,17 +14,11 @@ public interface BookService {
 
     void addOldBook(Long id, Long num); // replenish books
 
-    void addNewBook(String title, String author, String isbn, Float price, String pub, Long stock); // add a new book
+    void modBook(Book book);
+
+    void addNewBook(String title, String author, String isbn, Float price, String pub, Long stock, String pic_url); // add a new book
 
     void deleteBook(Long id);
 
-    void modTitle(Long id, String title);
-
-    void modAuthor(Long id, String author);
-
-    void modIsbn(Long id, String isbn);
-
-    void modPrice(Long id, Float price);
-
-    void modPub(Long id, String pub);
+    void modPic(Long id, String pic_url);
 }

@@ -1,5 +1,7 @@
 package com.example.ebookbackend.service;
 
+import com.example.ebookbackend.constant.forms.BookSalesForm;
+import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
 import com.example.ebookbackend.entity.Order;
 
 import java.util.Date;
@@ -10,7 +12,13 @@ public interface OrderService {
 
     List<Order> findByUser(Long user_id);
 
+    List<Order> findAll();
+
     List<Order> findTimeBetween(Date earlier, Date later);
+
+    List<BookSalesForm> sortOrdersBySales(List<Order> orders);
+
+    List<BookSalesMoneyForm> sortOrdersByMoney(List<Order> orders);
 
     List<Order> findTimeBefore(Date later);
 

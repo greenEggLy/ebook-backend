@@ -1,11 +1,10 @@
 package com.example.ebookbackend.entity;
 
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Data
@@ -27,16 +26,23 @@ public class User {
     private String avatar;
     @Column(name = "about")
     private String about;
-    @Column(name = "admin")
-    private Boolean isAdmin;
-    @Column(name = "block")
-    private Boolean isBlocked;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "is_admin")
+    private Boolean is_admin;
 
-    @JsonIgnoreProperties(value = {"adder"})
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private UserAuth userAuth;
+
+    //    @JsonIgnoreProperties(value = {"adder"})
+    @JsonIgnore
     @OneToMany(mappedBy = "adder", cascade = CascadeType.ALL)
     private List<CartItem> cart;
 
-    @JsonIgnoreProperties(value = {"buyer"})
+    //    @JsonIgnoreProperties(value = {"buyer"})
+    @JsonIgnore
     @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private List<Order> orders;
 }

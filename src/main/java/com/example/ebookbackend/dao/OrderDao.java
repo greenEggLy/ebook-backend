@@ -8,6 +8,8 @@ import java.util.List;
 public interface OrderDao {
     Order findOne(Long id);
 
+    List<Order> findAll();
+
     List<Order> findByBuyer(Long id);
 
     List<Order> findTimeBetween(Date earlier, Date later);

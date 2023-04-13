@@ -25,6 +25,11 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    @Override
     public List<Order> findByBuyer(Long id) {
         return orderRepository.findOrdersByBuyer_Id(id);
     }

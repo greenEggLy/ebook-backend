@@ -36,9 +36,10 @@ public class Book {
     private Long stock;
     @Column(name = "sales")
     private Long sales;
-
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Picture> pics;
+    @Column(name = "picture", length = 2048)
+    private String picture;
+    @Column(name = "has_deleted")
+    private Boolean deleted;
 
     @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
