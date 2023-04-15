@@ -16,6 +16,8 @@ public interface OrderService {
 
     List<Order> findTimeBetween(Date earlier, Date later);
 
+    List<Order> findTimeBetweenByUser(Long user_id, Date earlier, Date later);
+
     List<BookSalesForm> sortOrdersBySales(List<Order> orders);
 
     List<BookSalesMoneyForm> sortOrdersByMoney(List<Order> orders);

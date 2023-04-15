@@ -2,6 +2,7 @@ package com.example.ebookbackend.serviceImpl;
 
 import com.example.ebookbackend.constant.forms.BookSalesForm;
 import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
+import com.example.ebookbackend.dao.BookDao;
 import com.example.ebookbackend.dao.CartItemDao;
 import com.example.ebookbackend.dao.OrderDao;
 import com.example.ebookbackend.dao.OrderItemDao;
@@ -21,6 +22,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemDao orderItemDao;
     @Autowired
     private CartItemDao cartItemDao;
+    @Autowired
+    private BookDao bookDao;
 
     @Override
     public Order findOne(Long id) {
@@ -40,6 +43,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findTimeBetween(Date earlier, Date later) {
         return orderDao.findTimeBetween(earlier, later);
+    }
+
+    @Override
+    public List<Order> findTimeBetweenByUser(Long user_id, Date earlier, Date later) {
+        return orderDao.findTimeBetweenByUser(user_id, earlier, later);
     }
 
     @Override
@@ -100,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
     public void addOrder(Long user_id, List<Long> cartItem_ids) {
         List<CartItem> cartItems = cartItemDao.findCartItemsByIds(cartItem_ids);
         Long orderId = orderDao.addOrder(user_id);
+        cartItems.forEach(cartItem -> bookDao.buyBook(cartItem.getBook().getId(), cartItem.getNumber()));
         orderItemDao.addOrderItems(cartItems, orderId);
         cartItemDao.deleteCartItems(cartItem_ids);
     }
@@ -107,6 +116,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void addOrderDirectly(Long user_id, Long book_id, Long num) {
         Long order_id = orderDao.addOrder(user_id);
+        bookDao.buyBook(book_id, num);
         orderItemDao.addOrderItem(book_id, order_id, num);
     }
 }

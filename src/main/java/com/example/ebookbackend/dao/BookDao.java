@@ -15,6 +15,8 @@ public interface BookDao {
 
     void deleteBook(Long id);
 
+    void buyBook(Long id, Long num);
+
     void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url);
 
     void modBook(Book book);

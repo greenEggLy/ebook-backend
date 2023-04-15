@@ -49,6 +49,12 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.findOrdersByTimeAfter(earlier);
     }
 
+    @Override
+    public List<Order> findTimeBetweenByUser(Long user_id, Date earlier, Date later) {
+        User user = userRepository.getUserById(user_id);
+        return orderRepository.findOrdersByBuyerAndTimeBetween(user, earlier, later);
+    }
+
 
     @Override
     public Long addOrder(Long user_id) {

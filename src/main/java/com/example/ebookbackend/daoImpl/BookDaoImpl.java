@@ -53,6 +53,17 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public void buyBook(Long id, Long num) {
+        Book book = getOne(id);
+        if (book == null) return;
+        Long cur_stock = book.getStock();
+        Long cur_sales = book.getSales();
+        book.setStock(cur_stock - num);
+        book.setSales(cur_sales + num);
+        bookRepository.save(book);
+    }
+
+    @Override
     public void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url) {
         sales = 0L;
         Book book = Book.builder()

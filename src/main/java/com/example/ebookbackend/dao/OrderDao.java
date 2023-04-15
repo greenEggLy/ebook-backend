@@ -18,6 +18,7 @@ public interface OrderDao {
 
     List<Order> findTimeAfter(Date earlier);
 
+    List<Order> findTimeBetweenByUser(Long user_id, Date earlier, Date later);
 
     Long addOrder(Long user_id);
 }

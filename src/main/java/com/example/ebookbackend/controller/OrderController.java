@@ -36,15 +36,29 @@ public class OrderController {
 
     @RequestMapping(value = "/order/get/sales/time/between")
     @CrossOrigin(value = "http://localhost:3000")
-    List<BookSalesForm> findTimeBetOrder(@DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
+    List<BookSalesForm> sortedSales(@DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
         List<Order> orders = orderService.findTimeBetween(earlier, later);
         return orderService.sortOrdersBySales(orders);
     }
 
     @RequestMapping(value = "/order/get/money/time/between")
     @CrossOrigin(value = "http://localhost:3000")
-    List<BookSalesMoneyForm> findMoneyBetOrder(@DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
+    List<BookSalesMoneyForm> sortedMoney(@DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
         List<Order> orders = orderService.findTimeBetween(earlier, later);
+        return orderService.sortOrdersByMoney(orders);
+    }
+
+    @RequestMapping(value = "/order/get/sales/time/between/{user_id}")
+    @CrossOrigin(value = "http://localhost:3000")
+    List<BookSalesForm> sortedSalesByUser(@PathVariable("user_id") Long user_id, @DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
+        List<Order> orders = orderService.findTimeBetweenByUser(user_id, earlier, later);
+        return orderService.sortOrdersBySales(orders);
+    }
+
+    @RequestMapping(value = "/order/get/money/time/between/{user_id}")
+    @CrossOrigin(value = "http://localhost:3000")
+    List<BookSalesMoneyForm> sortedMoneyByUser(@PathVariable("user_id") Long user_id, @DateTimeFormat(pattern = "yyyy-MM-dd") Date earlier, @DateTimeFormat(pattern = "yyyy-MM-dd") Date later) {
+        List<Order> orders = orderService.findTimeBetweenByUser(user_id, earlier, later);
         return orderService.sortOrdersByMoney(orders);
     }
 
