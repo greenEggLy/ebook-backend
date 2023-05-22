@@ -35,7 +35,7 @@ public class Order {
 
 
     @JsonIgnoreProperties(value = {"order"})
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<OrderItem> items;
 
 
