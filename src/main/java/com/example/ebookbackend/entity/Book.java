@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.List;
 
 
@@ -38,6 +39,10 @@ public class Book {
     private Long sales;
     @Column(name = "picture", length = 2048)
     private String picture;
+
+    @Column(name = "cover")
+    private String cover;
+
     @Column(name = "has_deleted")
     private Boolean deleted;
 

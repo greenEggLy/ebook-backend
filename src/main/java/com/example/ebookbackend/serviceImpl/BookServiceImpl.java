@@ -23,6 +23,7 @@ public class BookServiceImpl implements BookService {
         return bookDao.getAll();
     }
 
+
     @Override
     public void buyBooks(Long id, Long num) {
         bookDao.addSales(id, num);
@@ -35,7 +36,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void modBook(Book book) {
+    public void modBook(Book book) throws Exception {
         bookDao.modBook(book);
     }
 
@@ -50,8 +51,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void modPic(Long id, String pic_url) {
-        bookDao.modPic(id, pic_url);
+    public void modPic(Long id, String cover) {
+        bookDao.modPic(id, cover);
     }
 
 }

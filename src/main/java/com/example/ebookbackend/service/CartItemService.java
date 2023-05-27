@@ -7,7 +7,7 @@ import java.util.List;
 public interface CartItemService {
     CartItem findOne(Long id);
 
-    List<CartItem> findCartItems(List<Long> cartItem_ids);
+    List<CartItem> findCartItems(List<Long> cartItem_ids) throws Exception;
 
     List<CartItem> findUserAll(Long user_id); // id is user id
 

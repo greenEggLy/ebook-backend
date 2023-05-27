@@ -2,6 +2,7 @@ package com.example.ebookbackend.service;
 
 import com.example.ebookbackend.constant.forms.BookSalesForm;
 import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
+import com.example.ebookbackend.constant.forms.UserMoneyForm;
 import com.example.ebookbackend.entity.Order;
 
 import java.util.Date;
@@ -26,7 +27,9 @@ public interface OrderService {
 
     List<Order> findTimeAfter(Date earlier);
 
-    void addOrder(Long user_id, List<Long> cartItem_ids);
+    void addOrder(Long user_id, List<Long> cartItem_ids) throws Exception;
 
-    void addOrderDirectly(Long user_id, Long book_id, Long num);
+    void addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception;
+
+    List<UserMoneyForm> sortUserByMoney(List<Order> orders);
 }

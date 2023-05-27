@@ -59,11 +59,17 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Long addOrder(Long user_id) {
         User user = userRepository.getUserById(user_id);
+        if (user == null) throw new RuntimeException("用户不存在");
         Order order = Order.builder()
                 .buyer(user)
                 .time(new Date())
                 .build();
         orderRepository.save(order);
         return order.getId();
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        orderRepository.deleteById(id);
     }
 }

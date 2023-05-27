@@ -53,11 +53,12 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void buyBook(Long id, Long num) {
+    public void buyBook(Long id, Long num) throws Exception {
         Book book = getOne(id);
-        if (book == null) return;
+        if (book == null) throw new RuntimeException("该书籍不存在");
         Long cur_stock = book.getStock();
         Long cur_sales = book.getSales();
+        if (cur_stock < num) throw new RuntimeException("库存不足");
         book.setStock(cur_stock - num);
         book.setSales(cur_sales + num);
         bookRepository.save(book);
@@ -74,20 +75,25 @@ public class BookDaoImpl implements BookDao {
                 .pub(pub)
                 .stock(stock)
                 .sales(sales)
-                .picture(pic_url)
+                .cover(pic_url)
+                .deleted(false)
                 .build();
         bookRepository.save(book);
     }
 
     @Override
     public void modBook(Book book) {
-        bookRepository.save(book);
+        try {
+            bookRepository.save(book);
+        } catch (Exception e) {
+            throw new RuntimeException("修改失败");
+        }
     }
 
     @Override
-    public void modPic(Long id, String pic_url) {
+    public void modPic(Long id, String cover) {
         Book book = getOne(id);
-        book.setPicture(pic_url);
+        book.setCover(cover);
         bookRepository.save(book);
     }
 

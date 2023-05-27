@@ -15,13 +15,13 @@ public interface BookDao {
 
     void deleteBook(Long id);
 
-    void buyBook(Long id, Long num);
+    void buyBook(Long id, Long num) throws Exception;
 
     void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url);
 
-    void modBook(Book book);
+    void modBook(Book book) throws Exception;
 
-    void modPic(Long id, String pic_url);
+    void modPic(Long id, String cover);
 
     void addStock(Long id, Long num);
 

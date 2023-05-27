@@ -1,5 +1,6 @@
 package com.example.ebookbackend.serviceImpl;
 
+import com.example.ebookbackend.constant.forms.AvatarInfoForm;
 import com.example.ebookbackend.constant.forms.ManUserInfoForm;
 import com.example.ebookbackend.constant.forms.UserInfoForm;
 import com.example.ebookbackend.dao.UserAuthDao;
@@ -104,7 +105,6 @@ public class UserServiceImpl implements UserService {
             user.setName(user_info.getUsername());
             user.setAbout(user_info.getAbout());
             user.setEmail(user_info.getEmail());
-            user.setAvatar(user_info.getAvatar());
             userRepository.save(user);
         }
     }
@@ -122,6 +122,16 @@ public class UserServiceImpl implements UserService {
         if (userAuth != null) {
             userAuth.setIsBlocked(infoForm.getIs_blocked());
             userAuthRepository.save(userAuth);
+        }
+    }
+
+    @Override
+    public void modUserAvatar(AvatarInfoForm form) {
+        User user = userDao.findUserById(form.getId());
+        if (user != null) {
+            user.setAvatar(form.getAvatar());
+            userRepository.save(user);
+            System.out.println("ok");
         }
     }
 

@@ -15,6 +15,10 @@ public class MsgUtil {
     public static final int SIGN_UP_USERNAME_ERROR = -200;
     public static final int SIGN_UP_EMAIL_EXIST_ERROR = -201;
 
+    // upload information error code
+
+    public static final int UPLOAD_ERROR = -300;
+
 
     // log in error message
     public static final String SUCCESS_MSG = "成功！";
@@ -29,6 +33,9 @@ public class MsgUtil {
     // sign up error message
     public static final String SIGN_UP_USERNAME_ERROR_MSG = "用户名已存在！";
     public static final String SIGN_UP_EMAIL_EXIT_ERROR_MSG = "邮箱已存在！";
+
+    // upload information error message
+    public static final String UPLOAD_ERROR_MSG = "上传失败！";
 
 
     public static Msg makeMsg(MsgCode code, JSONObject data) {

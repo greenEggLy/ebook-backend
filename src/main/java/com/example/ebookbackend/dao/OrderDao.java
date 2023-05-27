@@ -20,5 +20,8 @@ public interface OrderDao {
 
     List<Order> findTimeBetweenByUser(Long user_id, Date earlier, Date later);
 
-    Long addOrder(Long user_id);
+    Long addOrder(Long user_id) throws Exception;
+
+
+    void deleteOrder(Long id);
 }

@@ -5,6 +5,7 @@ import com.example.ebookbackend.service.CartItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -27,7 +28,11 @@ public class CartController {
     @RequestMapping(value = "/cart/get-items")
     @CrossOrigin(value = "http://localhost:3000")
     public List<CartItem> findCartItems(@RequestParam List<Long> id) {
-        return cartService.findCartItems(id);
+        try {
+            return cartService.findCartItems(id);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     @RequestMapping(value = "/cart/add")

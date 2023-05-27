@@ -23,7 +23,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public List<CartItem> findCartItems(List<Long> cartItem_ids) {
+    public List<CartItem> findCartItems(List<Long> cartItem_ids) throws Exception {
         return cartItemDao.findCartItemsByIds(cartItem_ids);
     }
 

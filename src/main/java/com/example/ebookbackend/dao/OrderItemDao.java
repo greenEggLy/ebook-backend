@@ -15,9 +15,9 @@ public interface OrderItemDao {
     List<OrderItem> getAll();
 
 
-    void addOrderItems(List<CartItem> cartItems, Long order_id);
+    void addOrderItems(List<CartItem> cartItems, Long order_id) throws Exception;
 
-    void addOrderItem(Long book_id, Long order_id, Long num);
+    void addOrderItem(Long book_id, Long order_id, Long num) throws Exception;
 
     void update(OrderItem orderItem);
 }

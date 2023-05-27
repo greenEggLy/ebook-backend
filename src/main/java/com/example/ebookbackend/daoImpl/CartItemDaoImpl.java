@@ -38,6 +38,7 @@ public class CartItemDaoImpl implements CartItemDao {
         for (Long id : ids) {
             CartItem item = cartItemRepository.getCartItemById(id);
             if (item != null) cartItems.add(item);
+            else throw new RuntimeException("cartItem not found");
         }
         return cartItems;
     }

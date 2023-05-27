@@ -10,7 +10,7 @@ public interface CartItemDao {
 
     CartItem findCartItemById(Long id);
 
-    List<CartItem> findCartItemsByIds(List<Long> ids);
+    List<CartItem> findCartItemsByIds(List<Long> ids) throws Exception;
 
     List<CartItem> findCartByAdder(User user);
 

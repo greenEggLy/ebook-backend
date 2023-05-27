@@ -7,8 +7,8 @@ public class GlobalInfo {
     public static final String PASSWORD = "password";
     public static final String USER = "user";
 
-    public static final String USER_ID = "userId";
-    public static final String USER_TYPE = "userType";
+    public static final String USER_ID = "id";
+    public static final String USER_TYPE = "is_admin";
     public static final String REMEMBER_ME = "remember";
 
     public static final Integer ADMIN_NUMBER = 1;

@@ -2,13 +2,12 @@ package com.example.ebookbackend.serviceImpl;
 
 import com.example.ebookbackend.constant.forms.BookSalesForm;
 import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
-import com.example.ebookbackend.dao.BookDao;
-import com.example.ebookbackend.dao.CartItemDao;
-import com.example.ebookbackend.dao.OrderDao;
-import com.example.ebookbackend.dao.OrderItemDao;
+import com.example.ebookbackend.constant.forms.UserMoneyForm;
+import com.example.ebookbackend.dao.*;
 import com.example.ebookbackend.entity.CartItem;
 import com.example.ebookbackend.entity.Order;
 import com.example.ebookbackend.service.OrderService;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +23,8 @@ public class OrderServiceImpl implements OrderService {
     private CartItemDao cartItemDao;
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public Order findOne(Long id) {
@@ -105,18 +106,49 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrder(Long user_id, List<Long> cartItem_ids) {
+    public void addOrder(Long user_id, List<Long> cartItem_ids) throws Exception {
         List<CartItem> cartItems = cartItemDao.findCartItemsByIds(cartItem_ids);
         Long orderId = orderDao.addOrder(user_id);
-        cartItems.forEach(cartItem -> bookDao.buyBook(cartItem.getBook().getId(), cartItem.getNumber()));
-        orderItemDao.addOrderItems(cartItems, orderId);
-        cartItemDao.deleteCartItems(cartItem_ids);
+        try {
+            orderItemDao.addOrderItems(cartItems, orderId);
+            cartItemDao.deleteCartItems(cartItem_ids);
+        } catch (Exception e) {
+            orderDao.deleteOrder(orderId);
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
-    public void addOrderDirectly(Long user_id, Long book_id, Long num) {
+    public void addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception {
         Long order_id = orderDao.addOrder(user_id);
-        bookDao.buyBook(book_id, num);
-        orderItemDao.addOrderItem(book_id, order_id, num);
+        try {
+            orderItemDao.addOrderItem(book_id, order_id, num);
+        } catch (Exception e) {
+            orderDao.deleteOrder(order_id);
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<UserMoneyForm> sortUserByMoney(List<Order> orders) {
+        Map<Long, Double> map = new HashMap<Long, Double>();
+        orders.forEach(order -> {
+            order.getItems().forEach(orderItem -> {
+                if (map.containsKey(order.getBuyer().getId())) {
+                    map.put(order.getBuyer().getId(), map.get(order.getBuyer().getId()) + orderItem.getPrice() * orderItem.getNumber());
+                } else {
+                    map.put(order.getBuyer().getId(), (double) (orderItem.getPrice() * orderItem.getNumber()));
+                }
+            });
+        });
+        List<UserMoneyForm> list = new ArrayList<UserMoneyForm>();
+        map.forEach((key, value) -> {
+            var username = userDao.findUserById(key).getName();
+            list.add(UserMoneyForm.builder().id(key).username(username).money(value).build());
+        });
+        list.sort((o1, o2) -> {
+            return o2.getMoney().compareTo(o1.getMoney());
+        });
+        return list;
     }
 }

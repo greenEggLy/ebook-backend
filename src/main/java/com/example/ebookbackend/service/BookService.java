@@ -10,15 +10,16 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
+
     void buyBooks(Long id, Long num); // only modify stocks and sales
 
     void addOldBook(Long id, Long num); // replenish books
 
-    void modBook(Book book);
+    void modBook(Book book) throws Exception;
 
     void addNewBook(String title, String author, String isbn, Float price, String pub, Long stock, String pic_url); // add a new book
 
     void deleteBook(Long id);
 
-    void modPic(Long id, String pic_url);
+    void modPic(Long id, String cover);
 }

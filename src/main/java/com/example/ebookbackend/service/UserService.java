@@ -1,5 +1,6 @@
 package com.example.ebookbackend.service;
 
+import com.example.ebookbackend.constant.forms.AvatarInfoForm;
 import com.example.ebookbackend.constant.forms.ManUserInfoForm;
 import com.example.ebookbackend.constant.forms.UserInfoForm;
 import com.example.ebookbackend.entity.User;
@@ -23,4 +24,6 @@ public interface UserService {
     void modUser_uinfo(UserInfoForm user_info);
 
     void modUserInfo(ManUserInfoForm infoForm);
+
+    void modUserAvatar(AvatarInfoForm form);
 }
