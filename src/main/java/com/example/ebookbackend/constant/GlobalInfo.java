@@ -14,5 +14,7 @@ public class GlobalInfo {
     public static final Integer ADMIN_NUMBER = 1;
     public static final Integer USER_NUMBER = 0;
 
-    public static final String DEFAULT_AVATAR = "https://picx.zhimg.com/50/v2-6afa72220d29f045c15217aa6b275808_720w.jpg?source=1940ef5c";
+    public static final String DEFAULT_AVATAR = "b9b071aa-5463-4cff-a862-d6875423559f.png";
+
+    public static final String EMAIL_REGEX = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
 }

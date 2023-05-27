@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.util.List;
 
 
@@ -17,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "books")
+@Table(name = "books", uniqueConstraints = @UniqueConstraint(columnNames = "isbn"))
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +36,6 @@ public class Book {
     private Long stock;
     @Column(name = "sales")
     private Long sales;
-    @Column(name = "picture", length = 2048)
-    private String picture;
-
     @Column(name = "cover")
     private String cover;
 

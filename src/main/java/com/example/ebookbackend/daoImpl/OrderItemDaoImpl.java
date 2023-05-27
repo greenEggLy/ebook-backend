@@ -53,6 +53,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
             Book book = bookRepository.findBookById(cartItem.getBook().getId());
             if (book == null) throw new RuntimeException("该书籍不存在");
             if (book.getStock() < cartItem.getNumber()) throw new RuntimeException("库存不足");
+            if (cartItem.getNumber() <= 0) throw new RuntimeException("购买数量不能小于等于0");
             book.setStock(book.getStock() - cartItem.getNumber());
             book.setSales(book.getSales() + cartItem.getNumber());
             books.add(book);
@@ -82,7 +83,6 @@ public class OrderItemDaoImpl implements OrderItemDao {
                 .order(order)
                 .price(book.getPrice())
                 .build();
-        System.out.println(orderItem.getPrice());
         itemRepository.save(orderItem);
     }
 

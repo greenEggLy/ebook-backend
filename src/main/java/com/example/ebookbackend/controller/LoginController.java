@@ -10,13 +10,14 @@ import com.example.ebookbackend.utils.Msg;
 import com.example.ebookbackend.utils.MsgCode;
 import com.example.ebookbackend.utils.MsgUtil;
 import com.example.ebookbackend.utils.SessionUtil;
-import lombok.val;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.regex.Pattern;
 
 @RestController
 public class LoginController {
@@ -78,13 +79,15 @@ public class LoginController {
         String username = form.getUsername();
         String password = form.getPassword();
         String email = form.getEmail();
-        assert username != null && password != null && email != null;
-        val status = userService.checkSignUpUser(username, email, password);
-        if (status == 0)
-            return MsgUtil.makeMsg(MsgCode.SUCCESS);
-        else if (status == 1)
-            return MsgUtil.makeMsg(MsgCode.SIGN_UP_USERNAME_ERROR);
-        else
-            return MsgUtil.makeMsg(MsgCode.SIGN_UP_EMAIL_EXIST_ERROR);
+        Pattern pattern = Pattern.compile(GlobalInfo.EMAIL_REGEX);
+        if (!pattern.matcher(email).matches()) {
+            return MsgUtil.makeMsg(MsgUtil.ERROR, MsgUtil.EMAIL_FORMAT_ERROR_MSG);
+        }
+        try {
+            userService.checkSignUpUser(username, email, password);
+        } catch (Exception e) {
+            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
+        }
+        return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG);
     }
 }

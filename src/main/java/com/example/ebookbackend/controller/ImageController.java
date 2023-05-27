@@ -27,7 +27,6 @@ public class ImageController {
             return;
         }
         String path = ResourceUtils.getURL("classpath:").getPath() + "static/";
-        System.out.println(path + img_name);
         File file = new File(path + img_name);
         BufferedImage image = ImageIO.read(file);
         OutputStream outputStream = response.getOutputStream();
@@ -42,7 +41,6 @@ public class ImageController {
         assert fname != null;
         String suffixName = fname.substring(fname.lastIndexOf("."));//获取文件后缀
         fname = UUID.randomUUID() + suffixName;//重新生成文件名
-        System.out.println(fname);
         File targetFile = new File(path);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
@@ -52,11 +50,9 @@ public class ImageController {
         try {
             //指定本地存入路径
             file.transferTo(saveFile);
-            System.out.println("执行成功");
             filePath = path + "/" + fname;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("执行失败");
             return MsgUtil.makeMsg(MsgUtil.UPLOAD_ERROR, "上传失败");
         }
         // build a JSON object as response

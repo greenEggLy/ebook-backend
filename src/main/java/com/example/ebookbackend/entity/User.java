@@ -43,6 +43,6 @@ public class User {
 
     //    @JsonIgnoreProperties(value = {"buyer"})
     @JsonIgnore
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.DETACH)
     private List<Order> orders;
 }

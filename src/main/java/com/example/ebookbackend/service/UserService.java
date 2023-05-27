@@ -19,9 +19,9 @@ public interface UserService {
 
     UserAuth checkUser(String username, String password);
 
-    Integer checkSignUpUser(String username, String email, String password);
+    void checkSignUpUser(String username, String email, String password) throws Exception;
 
-    void modUser_uinfo(UserInfoForm user_info);
+    void modUser_uinfo(UserInfoForm user_info) throws Exception;
 
     void modUserInfo(ManUserInfoForm infoForm);
 

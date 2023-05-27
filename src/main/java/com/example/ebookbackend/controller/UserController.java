@@ -5,6 +5,8 @@ import com.example.ebookbackend.constant.forms.ManUserInfoForm;
 import com.example.ebookbackend.constant.forms.UserInfoForm;
 import com.example.ebookbackend.entity.User;
 import com.example.ebookbackend.service.UserService;
+import com.example.ebookbackend.utils.Msg;
+import com.example.ebookbackend.utils.MsgUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +24,13 @@ public class UserController {
 
 
     @PostMapping(value = "/uinfo")
-    public void modUser(@RequestBody UserInfoForm user_info) {
-        userService.modUser_uinfo(user_info);
+    public Msg modUser(@RequestBody UserInfoForm user_info) {
+        try {
+            userService.modUser_uinfo(user_info);
+            return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+        } catch (Exception e) {
+            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
+        }
     }
 
     @RequestMapping(value = "/info/get/{id}")
@@ -43,7 +50,6 @@ public class UserController {
 
     @PostMapping(value = "/avatar")
     public void modUserAvatar(@RequestBody AvatarInfoForm form) {
-        System.out.println(form);
         userService.modUserAvatar(form);
     }
 }

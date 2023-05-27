@@ -32,5 +32,5 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id")
     @JsonIgnore
-    private Order order;    // belongs to which order
+    private Order order;
 }

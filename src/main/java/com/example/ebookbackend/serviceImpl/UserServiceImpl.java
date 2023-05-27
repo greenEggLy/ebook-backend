@@ -72,41 +72,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer checkSignUpUser(String username, String email, String password) {
-        User user = userDao.findUserByName(username);
-        if (user != null) {
-            return 1; // has username
-        }
-        user = userDao.findUserByEmail(email);
-        if (user != null) {
-            return 2; // has email
-        }
+    public void checkSignUpUser(String username, String email, String password) throws Exception {
         // create user
-        user = User.builder()
-                .name(username)
-                .email(email)
-                .avatar(DEFAULT_AVATAR)
-                .is_admin(false)
-                .build();
-        userRepository.save(user);
-        UserAuth userAuth = UserAuth.builder()
-                .user(user)
-                .password(password)
-                .isBlocked(false)
-                .build();
-        userAuthRepository.save(userAuth);
-        return 0; // success
+        try {
+            User user = User.builder()
+                    .name(username)
+                    .email(email)
+                    .avatar(DEFAULT_AVATAR)
+                    .is_admin(false)
+                    .build();
+            userRepository.save(user);
+            UserAuth userAuth = UserAuth.builder()
+                    .user(user)
+                    .password(password)
+                    .isBlocked(false)
+                    .build();
+            userAuthRepository.save(userAuth);
+        } catch (Exception e) {
+            throw new Exception("用户名或邮箱已存在");
+        }
     }
 
     @Override
-    public void modUser_uinfo(UserInfoForm user_info) {
-        User user = userDao.findUserById(user_info.getId());
-        if (user != null) {
-            user.setName(user_info.getUsername());
-            user.setAbout(user_info.getAbout());
-            user.setEmail(user_info.getEmail());
-            userRepository.save(user);
+    public void modUser_uinfo(UserInfoForm user_info) throws Exception {
+        {
+            User user = userDao.findUserById(user_info.getId());
+            if (user != null) {
+                try {
+                    user.setName(user_info.getUsername());
+                    user.setAbout(user_info.getAbout());
+                    user.setEmail(user_info.getEmail());
+                    userRepository.save(user);
+                } catch (Exception e) {
+                    throw new Exception("用户名或邮箱已存在");
+                }
+            } else {
+                throw new Exception("用户不存在");
+            }
         }
+
     }
 
     @Override
@@ -131,7 +135,6 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setAvatar(form.getAvatar());
             userRepository.save(user);
-            System.out.println("ok");
         }
     }
 
