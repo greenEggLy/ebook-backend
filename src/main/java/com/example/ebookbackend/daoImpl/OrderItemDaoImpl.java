@@ -54,6 +54,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
             if (book == null) throw new RuntimeException("该书籍不存在");
             if (book.getStock() < cartItem.getNumber()) throw new RuntimeException("库存不足");
             if (cartItem.getNumber() <= 0) throw new RuntimeException("购买数量不能小于等于0");
+            if (book.getDeleted() == true) throw new RuntimeException(book.getTitle() + "已下架");
             book.setStock(book.getStock() - cartItem.getNumber());
             book.setSales(book.getSales() + cartItem.getNumber());
             books.add(book);
