@@ -1,4 +1,4 @@
-package com.example.ebookbackend.serviceImpl;
+package com.example.ebookbackend.service.serviceImpl;
 
 import com.example.ebookbackend.dao.CartItemDao;
 import com.example.ebookbackend.dao.UserDao;

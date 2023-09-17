@@ -1,4 +1,4 @@
-package com.example.ebookbackend.serviceImpl;
+package com.example.ebookbackend.service.serviceImpl;
 
 import com.example.ebookbackend.dao.BookDao;
 import com.example.ebookbackend.entity.Book;

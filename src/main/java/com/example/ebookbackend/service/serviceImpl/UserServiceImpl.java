@@ -1,8 +1,8 @@
-package com.example.ebookbackend.serviceImpl;
+package com.example.ebookbackend.service.serviceImpl;
 
-import com.example.ebookbackend.constant.forms.AvatarInfoForm;
-import com.example.ebookbackend.constant.forms.ManUserInfoForm;
-import com.example.ebookbackend.constant.forms.UserInfoForm;
+import com.example.ebookbackend.constant.common.AvatarInfoForm;
+import com.example.ebookbackend.constant.common.ManUserInfoForm;
+import com.example.ebookbackend.constant.common.UserInfoForm;
 import com.example.ebookbackend.dao.UserAuthDao;
 import com.example.ebookbackend.dao.UserDao;
 import com.example.ebookbackend.entity.User;
@@ -58,18 +58,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getAll();
     }
 
-    @Override
-    public UserAuth checkUser(String username, String password) {
-        User user = userDao.findUserByName(username);
-        UserAuth userAuth = userAuthDao.getUserAuthByUser(user);
-        if (userAuth == null) {
-            return null;
-        }
-        if (userAuth.getPassword().equals(password)) {
-            return userAuth;
-        }
-        return null;
-    }
 
     @Override
     public void checkSignUpUser(String username, String email, String password) throws Exception {

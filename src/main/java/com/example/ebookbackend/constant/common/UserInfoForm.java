@@ -1,4 +1,4 @@
-package com.example.ebookbackend.constant.forms;
+package com.example.ebookbackend.constant.common;
 
 
 import lombok.AllArgsConstructor;

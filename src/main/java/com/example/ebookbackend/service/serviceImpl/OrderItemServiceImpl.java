@@ -1,10 +1,7 @@
-package com.example.ebookbackend.serviceImpl;
+package com.example.ebookbackend.service.serviceImpl;
 
 import com.example.ebookbackend.dao.OrderItemDao;
-import com.example.ebookbackend.dao.UserDao;
-import com.example.ebookbackend.entity.Order;
 import com.example.ebookbackend.entity.OrderItem;
-import com.example.ebookbackend.entity.User;
 import com.example.ebookbackend.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

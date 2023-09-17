@@ -1,8 +1,8 @@
 package com.example.ebookbackend.controller;
 
-import com.example.ebookbackend.constant.forms.AvatarInfoForm;
-import com.example.ebookbackend.constant.forms.ManUserInfoForm;
-import com.example.ebookbackend.constant.forms.UserInfoForm;
+import com.example.ebookbackend.constant.common.AvatarInfoForm;
+import com.example.ebookbackend.constant.common.ManUserInfoForm;
+import com.example.ebookbackend.constant.common.UserInfoForm;
 import com.example.ebookbackend.entity.User;
 import com.example.ebookbackend.service.UserService;
 import com.example.ebookbackend.utils.Msg;

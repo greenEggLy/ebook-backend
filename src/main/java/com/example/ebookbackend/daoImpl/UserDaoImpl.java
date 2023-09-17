@@ -1,6 +1,6 @@
 package com.example.ebookbackend.daoImpl;
 
-import com.example.ebookbackend.constant.forms.ManUserInfoForm;
+import com.example.ebookbackend.constant.common.ManUserInfoForm;
 import com.example.ebookbackend.dao.UserDao;
 import com.example.ebookbackend.entity.User;
 import com.example.ebookbackend.repository.UserRepository;

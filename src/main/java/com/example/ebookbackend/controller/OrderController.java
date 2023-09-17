@@ -1,14 +1,17 @@
 package com.example.ebookbackend.controller;
 
-import com.example.ebookbackend.constant.forms.BookSalesForm;
-import com.example.ebookbackend.constant.forms.BookSalesMoneyForm;
-import com.example.ebookbackend.constant.forms.UserMoneyForm;
+import com.example.ebookbackend.constant.common.*;
 import com.example.ebookbackend.entity.Order;
 import com.example.ebookbackend.service.OrderService;
 import com.example.ebookbackend.utils.Msg;
 import com.example.ebookbackend.utils.MsgUtil;
+import lombok.var;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -17,8 +20,13 @@ import java.util.List;
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
 public class OrderController {
+    private final Logger logger = LoggerFactory.getLogger(OrderController.class);
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private KafkaTemplate<String, AddOrderMul> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, AddOrderOne> kafkaTemplate2;
 
     @RequestMapping(value = "/order/get/{order_id}")
     Order getOrder(@PathVariable("order_id") Long order_id) {
@@ -77,21 +85,56 @@ public class OrderController {
 
     @RequestMapping(value = "/order/add")
     Msg addOrder(Long user_id, @RequestParam List<Long> item_id) { // send bookIds and create orderItems and order
+        AddOrderMul addOrder = AddOrderMul.builder().
+                item_id(item_id)
+                .user_id(user_id)
+                .build();
         try {
-            orderService.addOrder(user_id, item_id);
-            return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+            kafkaTemplate.send("mul-orders",
+                    addOrder);
         } catch (Exception e) {
-            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
+            logger.info("send error");
+        }
+        return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+//        try {
+//            orderService.addOrder(user_id, item_id);
+//            return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+//        } catch (Exception e) {
+//            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
+//        }
+    }
+
+    @KafkaListener(topics = "mul-orders")
+    void addOrderListener(AddOrderMul payload) {
+        logger.info("Received payload='{}'", payload.toString());
+        try {
+            orderService.addOrder(payload.user_id, payload.item_id);
+            logger.info(payload.user_id.toString() + " buys " + payload);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
+
     @RequestMapping(value = "/order/add/directly")
     Msg addOrderDirectly(Long user_id, Long book_id, Long num) { // send bookIds and create orderItems and order
+        var addOrder = AddOrderOne.builder().
+                book_id(book_id)
+                .user_id(user_id)
+                .num(num)
+                .build();
+        kafkaTemplate2.send("one-order",
+                addOrder);
+        return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+    }
+
+    @KafkaListener(topics = "one-order")
+    void addOrderDirectlyListener(AddOrderOne payload) {
         try {
-            orderService.addOrderDirectly(user_id, book_id, num);
-            return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
+            orderService.addOrderDirectly(payload.user_id, payload.book_id, payload.num);
+            logger.info(payload.user_id.toString() + " buys " + payload);
         } catch (Exception e) {
-            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

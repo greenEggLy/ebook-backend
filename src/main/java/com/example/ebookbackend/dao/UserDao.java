@@ -1,6 +1,6 @@
 package com.example.ebookbackend.dao;
 
-import com.example.ebookbackend.constant.forms.ManUserInfoForm;
+import com.example.ebookbackend.constant.common.ManUserInfoForm;
 import com.example.ebookbackend.entity.User;
 
 import java.util.List;
