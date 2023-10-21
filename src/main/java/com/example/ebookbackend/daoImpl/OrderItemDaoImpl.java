@@ -10,6 +10,8 @@ import com.example.ebookbackend.repository.OrderItemRepository;
 import com.example.ebookbackend.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void addOrderItems(List<CartItem> cartItems, Long order_id) throws Exception {
         Order order = orderRepository.findOrderById(order_id);
         List<Book> books = new ArrayList<Book>();
@@ -54,7 +57,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
             if (book == null) throw new RuntimeException("该书籍不存在");
             if (book.getStock() < cartItem.getNumber()) throw new RuntimeException("库存不足");
             if (cartItem.getNumber() <= 0) throw new RuntimeException("购买数量不能小于等于0");
-            if (book.getDeleted() == true) throw new RuntimeException(book.getTitle() + "已下架");
+            if (book.getDeleted()) throw new RuntimeException(book.getTitle() + "已下架");
             book.setStock(book.getStock() - cartItem.getNumber());
             book.setSales(book.getSales() + cartItem.getNumber());
             books.add(book);
@@ -70,6 +73,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public void addOrderItem(Long book_id, Long order_id, Long num) throws Exception {
         Order order = orderRepository.findOrderById(order_id);
         Book book = bookRepository.getBookById(book_id);

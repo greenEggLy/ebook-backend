@@ -22,8 +22,24 @@ public class EbookBackendApplication {
     }
 
     @Bean
+    public NewTopic cliMulOrderTopic() {
+        return TopicBuilder.name("cli-mul-orders")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
     public NewTopic oneOrderTopic() {
         return TopicBuilder.name("one-order")
+                .partitions(10)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic cliOneOrderTopic() {
+        return TopicBuilder.name("cli-one-order")
                 .partitions(10)
                 .replicas(1)
                 .build();

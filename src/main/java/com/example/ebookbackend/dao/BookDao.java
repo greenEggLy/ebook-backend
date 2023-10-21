@@ -17,11 +17,11 @@ public interface BookDao {
 
     void buyBook(Long id, Long num) throws Exception;
 
-    void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url);
+    Book addBook(Book book);
 
     void modBook(Book book) throws Exception;
 
-    void modPic(Long id, String cover);
+    Book modPic(Long id, String cover);
 
     void addStock(Long id, Long num);
 

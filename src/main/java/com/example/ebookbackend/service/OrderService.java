@@ -27,9 +27,9 @@ public interface OrderService {
 
     List<Order> findTimeAfter(Date earlier);
 
-    void addOrder(Long user_id, List<Long> cartItem_ids) throws Exception;
+    List<String> addOrder(Long user_id, List<Long> cartItem_ids) throws Exception;
 
-    void addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception;
+    String addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception;
 
     List<UserMoneyForm> sortUserByMoney(List<Order> orders);
 }
