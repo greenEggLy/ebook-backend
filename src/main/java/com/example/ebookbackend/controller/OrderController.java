@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +23,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private KafkaTemplate<String, AddOrderMul> kafkaTemplate;
+    private KafkaTemplate<String, AddOrderMul> kafkaTemplateMul;
     @Autowired
-    private KafkaTemplate<String, AddOrderOne> kafkaTemplate2;
+    private KafkaTemplate<String, AddOrderOne> kafkaTemplateOne;
 
     @RequestMapping(value = "/order/get/{order_id}")
     Order getOrder(@PathVariable("order_id") Long order_id) {
@@ -90,29 +89,12 @@ public class OrderController {
                 .user_id(user_id)
                 .build();
         try {
-            kafkaTemplate.send("mul-orders",
+            kafkaTemplateMul.send("mul-orders",
                     addOrder);
         } catch (Exception e) {
             logger.info("send error");
         }
         return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
-//        try {
-//            orderService.addOrder(user_id, item_id);
-//            return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
-//        } catch (Exception e) {
-//            return MsgUtil.makeMsg(MsgUtil.ERROR, e.getMessage());
-//        }
-    }
-
-    @KafkaListener(topics = "mul-orders")
-    void addOrderListener(AddOrderMul payload) {
-        logger.info("Received payload='{}'", payload.toString());
-        try {
-            orderService.addOrder(payload.user_id, payload.item_id);
-            logger.info(payload.user_id.toString() + " buys " + payload);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
 
@@ -123,19 +105,10 @@ public class OrderController {
                 .user_id(user_id)
                 .num(num)
                 .build();
-        kafkaTemplate2.send("one-order",
+        kafkaTemplateOne.send("one-order",
                 addOrder);
         return MsgUtil.makeMsg(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG);
     }
 
-    @KafkaListener(topics = "one-order")
-    void addOrderDirectlyListener(AddOrderOne payload) {
-        try {
-            orderService.addOrderDirectly(payload.user_id, payload.book_id, payload.num);
-            logger.info(payload.user_id.toString() + " buys " + payload);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
 }

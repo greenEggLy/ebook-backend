@@ -10,6 +10,9 @@ import com.example.ebookbackend.service.OrderService;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -52,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED)
     public List<BookSalesForm> sortOrdersBySales(List<Order> orders) {
         Map<String, Long> map = new HashMap<String, Long>();
         orders.forEach((order) -> {
@@ -74,6 +78,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED)
     public List<BookSalesMoneyForm> sortOrdersByMoney(List<Order> orders) {
         Map<String, Float> map = new HashMap<String, Float>();
         orders.forEach((order) -> {
@@ -96,6 +101,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED)
     public List<Order> findTimeBefore(Date later) {
         return orderDao.findTimeBefore(later);
     }
@@ -106,12 +112,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrder(Long user_id, List<Long> cartItem_ids) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public List<String> addOrder(Long user_id, List<Long> cartItem_ids) throws Exception {
         List<CartItem> cartItems = cartItemDao.findCartItemsByIds(cartItem_ids);
         Long orderId = orderDao.addOrder(user_id);
         try {
             orderItemDao.addOrderItems(cartItems, orderId);
             cartItemDao.deleteCartItems(cartItem_ids);
+
+            // return a list of book titles
+            List<String> titles = new ArrayList<String>();
+            cartItems.forEach(cartItem -> {
+                titles.add(cartItem.getBook().getTitle());
+            });
+            return titles;
         } catch (Exception e) {
             orderDao.deleteOrder(orderId);
             throw new RuntimeException(e.getMessage());
@@ -119,10 +133,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception {
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
+    public String addOrderDirectly(Long user_id, Long book_id, Long num) throws Exception {
         Long order_id = orderDao.addOrder(user_id);
         try {
             orderItemDao.addOrderItem(book_id, order_id, num);
+            return bookDao.findOne(book_id).getTitle();
         } catch (Exception e) {
             orderDao.deleteOrder(order_id);
             throw new RuntimeException(e.getMessage());
@@ -130,6 +146,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, isolation = Isolation.READ_COMMITTED)
     public List<UserMoneyForm> sortUserByMoney(List<Order> orders) {
         Map<Long, Double> map = new HashMap<Long, Double>();
         orders.forEach(order -> {

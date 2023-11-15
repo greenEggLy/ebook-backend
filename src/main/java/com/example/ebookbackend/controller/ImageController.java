@@ -26,6 +26,7 @@ public class ImageController {
         if (img_name.equals("null")) {
             return;
         }
+        System.out.println(ResourceUtils.getURL("classpath:").getPath());
         String path = ResourceUtils.getURL("classpath:").getPath() + "static/";
         File file = new File(path + img_name);
         BufferedImage image = ImageIO.read(file);

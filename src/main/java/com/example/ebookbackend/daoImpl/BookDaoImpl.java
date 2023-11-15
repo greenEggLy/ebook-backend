@@ -65,20 +65,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void addBook(String title, String author, String isbn, Float price, String pub, Long stock, Long sales, String pic_url) {
-        sales = 0L;
-        Book book = Book.builder()
-                .title(title)
-                .author(author)
-                .isbn(isbn)
-                .price(price)
-                .pub(pub)
-                .stock(stock)
-                .sales(sales)
-                .cover(pic_url)
-                .deleted(false)
-                .build();
+    public Book addBook(Book book) {
         bookRepository.save(book);
+        Book newbook = bookRepository.getBookByTitle(book.getTitle());
+        assert newbook != null;
+        return newbook;
     }
 
     @Override
@@ -91,10 +82,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void modPic(Long id, String cover) {
+    public Book modPic(Long id, String cover) {
         Book book = getOne(id);
         book.setCover(cover);
         bookRepository.save(book);
+        return book;
     }
 
 
