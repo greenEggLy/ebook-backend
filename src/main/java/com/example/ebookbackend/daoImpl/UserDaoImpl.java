@@ -3,26 +3,39 @@ package com.example.ebookbackend.daoImpl;
 import com.example.ebookbackend.constant.common.ManUserInfoForm;
 import com.example.ebookbackend.dao.UserDao;
 import com.example.ebookbackend.entity.User;
+import com.example.ebookbackend.entity.UserIcon;
+import com.example.ebookbackend.repository.UserIconRepository;
 import com.example.ebookbackend.repository.UserRepository;
 import lombok.val;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.example.ebookbackend.constant.GlobalInfo.ROLE_ADMIN;
 import static com.example.ebookbackend.constant.GlobalInfo.ROLE_USER;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+    private final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserIconRepository userIconRepository;
 
     @Override
     public User getOne(Long id) {
-        return userRepository.getUserById(id);
+        User user = userRepository.getUserById(id);
+        Integer _id = id.intValue();
+        Optional<UserIcon> userIcon = userIconRepository.findById(_id);
+        logger.info("find user icon from mongodb");
+        userIcon.ifPresent(icon -> user.setAvatar(icon.getIcon()));
+        return user;
     }
 
     @Override
@@ -44,7 +57,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUserById(Long id) {
-        return userRepository.findUserById(id);
+        User user = userRepository.findUserById(id);
+        Optional<UserIcon> userIcon = userIconRepository.findById(id.intValue());
+        if (userIcon.isPresent()) {
+            logger.info("find user icon from mongodb: {}: {}", userIcon.get().getId(), userIcon.get().getIcon());
+            user.setAvatar(userIcon.get().getIcon());
+        }
+        return user;
     }
 
     @Override

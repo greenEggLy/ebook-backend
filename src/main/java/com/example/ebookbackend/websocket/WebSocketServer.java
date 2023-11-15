@@ -2,14 +2,10 @@ package com.example.ebookbackend.websocket;
 
 import com.example.ebookbackend.constant.common.CliAddOrderMul;
 import com.example.ebookbackend.constant.common.CliAddOrderOne;
-import lombok.var;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +25,7 @@ public class WebSocketServer {
     public void sendMessageToUserMul(String user_id, CliAddOrderMul message) {
         try {
             Session toSession = SESSIONS.get(user_id);
-            var s = toSession.getBasicRemote();
+            RemoteEndpoint.Basic s = toSession.getBasicRemote();
             logger.log(Level.INFO, JSONObject.fromObject(message).toString());
             s.sendText(JSONObject.fromObject(message).toString());
         } catch (Exception e) {
@@ -40,7 +36,7 @@ public class WebSocketServer {
     public void sendMessageToUserOne(String user_id, CliAddOrderOne message) {
         try {
             Session toSession = SESSIONS.get(user_id);
-            var s = toSession.getBasicRemote();
+            RemoteEndpoint.Basic s = toSession.getBasicRemote();
             s.sendText(JSONObject.fromObject(message).toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -55,6 +51,7 @@ public class WebSocketServer {
             System.out.println("已经上线过了");
             return;
         }
+        logger.log(Level.INFO, user_id.trim() + " session established");
         SESSIONS.put(user_id.trim(), session);
     }
 
